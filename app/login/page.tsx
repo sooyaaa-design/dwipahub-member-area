@@ -1,0 +1,28 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { LoginForm } from "./login-form";
+
+export default async function LoginPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
+  return (
+    <div className="flex flex-1 items-center justify-center bg-[#F4F5F7] px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-[#E4E6EB] bg-white p-8 shadow-sm">
+        <div className="mb-6 flex flex-col items-center gap-1 text-center">
+          <div className="text-lg font-extrabold tracking-wide text-[#1B3A6B]">
+            DWIPAHUB
+          </div>
+          <p className="text-sm text-[#6E7280]">Masuk ke member area kamu</p>
+        </div>
+        <LoginForm />
+      </div>
+    </div>
+  );
+}
