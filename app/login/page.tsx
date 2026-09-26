@@ -2,14 +2,20 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LoginForm } from "./login-form";
 
-export default async function LoginPage() {
+export default async function LoginPage(props: PageProps<"/login">) {
+  const { next } = await props.searchParams;
+  const nextPath =
+    typeof next === "string" && next.startsWith("/") && !next.startsWith("//")
+      ? next
+      : undefined;
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (user) {
-    redirect("/dashboard");
+    redirect(nextPath ?? "/dashboard");
   }
 
   return (
@@ -21,7 +27,7 @@ export default async function LoginPage() {
           </div>
           <p className="text-sm text-[#6E7280]">Masuk ke member area kamu</p>
         </div>
-        <LoginForm />
+        <LoginForm next={nextPath} />
       </div>
     </div>
   );

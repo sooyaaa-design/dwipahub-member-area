@@ -1,7 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard"];
+// /dashboard itself is a public preview page; only these subareas require a
+// session.
+const PROTECTED_PREFIXES = [
+  "/dashboard/kelas",
+  "/dashboard/marketplace",
+  "/dashboard/profil",
+  "/dashboard/admin",
+];
 
 // Runs on every request via proxy.ts: refreshes the Supabase session cookie
 // and gates protected routes before any page renders.
@@ -44,6 +51,7 @@ export async function updateSession(request: NextRequest) {
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 

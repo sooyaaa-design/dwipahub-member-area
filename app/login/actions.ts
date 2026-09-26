@@ -23,5 +23,8 @@ export async function login(
     return { error: "Email atau password salah." };
   }
 
-  redirect("/dashboard");
+  const next = formData.get("next");
+  const isSafeNext = typeof next === "string" && next.startsWith("/") && !next.startsWith("//");
+
+  redirect(isSafeNext ? next : "/dashboard");
 }
