@@ -6,6 +6,8 @@ export type ModuleRow = {
   kategori: string;
   min_tier: string;
   trial_days: number;
+  vertical: string;
+  module_type: "kelas" | "marketplace" | "tool" | "app";
 };
 
 export type AccessStatus = "pending" | "active" | "expired" | "revoked" | "trial";
@@ -26,6 +28,9 @@ export function getModuleCta(
   loggedIn: boolean,
 ): Cta {
   if (!loggedIn) {
+    if (moduleRow.module_type === "marketplace") {
+      return { kind: "link", label: "Daftar untuk Akses", href: "/register" };
+    }
     return moduleRow.trial_days > 0
       ? {
           kind: "link",

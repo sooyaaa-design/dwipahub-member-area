@@ -1,6 +1,11 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
+import { MarketplaceCard } from "./marketplace-card";
+import {
+  MODULE_COLUMNS,
+  getMarketplaceState,
+  loadAccessByModuleId,
+} from "./marketplace-state";
 import { ModuleCard } from "./module-card";
 import { ModuleCtaButton, getModuleCta, type AccessRow, type ModuleRow } from "./module-cta";
 
@@ -18,7 +23,7 @@ export default async function DashboardPage() {
 
   const { data: modules } = await supabase
     .from("modules")
-    .select("id, nama, kategori, min_tier, trial_days")
+    .select(MODULE_COLUMNS)
     .order("created_at");
 
   const moduleRows = (modules ?? []) as ModuleRow[];
@@ -33,18 +38,7 @@ export default async function DashboardPage() {
       .eq("id", user.id)
       .maybeSingle();
     member = memberRow;
-
-    const { data: accessRows } = await supabase
-      .from("member_access")
-      .select("module_id, status, trial_ends_at")
-      .eq("member_id", user.id);
-
-    accessByModuleId = new Map(
-      (accessRows ?? []).map((row) => [
-        row.module_id as string,
-        { status: row.status, trial_ends_at: row.trial_ends_at } as AccessRow,
-      ]),
-    );
+    accessByModuleId = await loadAccessByModuleId(supabase, user.id);
   }
 
   const tier = member?.tier ?? "pengantar";
@@ -118,6 +112,18 @@ export default async function DashboardPage() {
           <div className="text-base font-extrabold">Modul & Akses Kamu</div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {moduleRows.map((moduleRow) => {
+              // Anonymous visitors get the full showroom; members only see
+              // marketplaces relevant to a kelas they own.
+              if (user && moduleRow.module_type === "marketplace") {
+                return (
+                  <MarketplaceCard
+                    key={moduleRow.id}
+                    moduleRow={moduleRow}
+                    state={getMarketplaceState(moduleRow, moduleRows, accessByModuleId)}
+                  />
+                );
+              }
+
               const access = accessByModuleId.get(moduleRow.id) ?? null;
               const cta = getModuleCta(moduleRow, access, !!user);
               return (
@@ -136,18 +142,6 @@ export default async function DashboardPage() {
           <div className="flex flex-col gap-4">
             <div className="text-base font-extrabold">Lainnya</div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              <ModuleCard
-                title="Paket Umroh Siap Jual"
-                description="Marketplace paket dari provider mitra"
-                footer={
-                  <Link
-                    href="/dashboard/marketplace"
-                    className="w-full rounded-lg border border-[#D8DAE0] px-4 py-2.5 text-center text-sm font-semibold text-[#14171F] hover:bg-[#F4F5F7]"
-                  >
-                    Lihat Marketplace
-                  </Link>
-                }
-              />
               <ModuleCard
                 title="Admin Dashboard (App)"
                 description="Kelola jamaah & keuangan bisnismu"
