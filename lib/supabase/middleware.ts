@@ -8,6 +8,7 @@ const PROTECTED_PREFIXES = [
   "/dashboard/marketplace",
   "/dashboard/profil",
   "/dashboard/admin",
+  "/dashboard/ai-tools",
 ];
 
 // Runs on every request via proxy.ts: refreshes the Supabase session cookie

@@ -1,6 +1,10 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { DUMMY_LESSONS, type Lesson } from "@/lib/dummy-data";
+import { TIER_LABEL, TIER_ORDER, formatSlug } from "@/lib/labels";
 import { createClient } from "@/lib/supabase/server";
 import { startTrial } from "../../actions";
+import { KelasPlayer } from "./kelas-player";
 
 export default async function KelasDetailPage(
   props: PageProps<"/dashboard/kelas/[id]">,
@@ -18,7 +22,7 @@ export default async function KelasDetailPage(
 
   const { data: moduleRow } = await supabase
     .from("modules")
-    .select("id, nama, kategori, min_tier, trial_days")
+    .select("id, nama, skill_area, min_tier, trial_days")
     .eq("id", id)
     .maybeSingle();
 
@@ -26,68 +30,88 @@ export default async function KelasDetailPage(
     notFound();
   }
 
-  const { data: access } = await supabase
-    .from("member_access")
-    .select("status, trial_ends_at")
-    .eq("member_id", user.id)
-    .eq("module_id", id)
-    .maybeSingle();
-
-  const { data: classes } = await supabase
-    .from("classes")
-    .select("id, judul, urutan")
-    .eq("module_id", id)
-    .order("urutan");
+  const [{ data: access }, { data: member }, { data: classes }] = await Promise.all([
+    supabase
+      .from("member_access")
+      .select("status, trial_ends_at")
+      .eq("member_id", user.id)
+      .eq("module_id", id)
+      .maybeSingle(),
+    supabase.from("members").select("tier").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("classes")
+      .select("id, judul, urutan")
+      .eq("module_id", id)
+      .order("urutan"),
+  ]);
 
   const classRows = classes ?? [];
+
+  // Mirrors the classes_select_if_unlocked RLS policy. An empty classes
+  // result is ambiguous under RLS (no lessons yet vs. no access), so this
+  // decides whether to show content at all.
+  const hasAccess =
+    classRows.length > 0 ||
+    (member != null &&
+      TIER_ORDER.indexOf(member.tier) >= TIER_ORDER.indexOf(moduleRow.min_tier)) ||
+    access?.status === "active" ||
+    (access?.status === "trial" &&
+      access.trial_ends_at != null &&
+      new Date(access.trial_ends_at) > new Date());
+
   const canStartTrial = !access && moduleRow.trial_days > 0;
+
+  // TODO: ganti dengan data asli — progress (selesai) dan durasi belum ada di
+  // skema; kalau classes masih kosong, seluruh daftar pelajaran memakai dummy.
+  const lessons: Lesson[] =
+    classRows.length > 0
+      ? classRows.map((c) => ({ id: c.id, judul: c.judul, durasi: null, selesai: false }))
+      : DUMMY_LESSONS;
 
   return (
     <div className="flex flex-1 flex-col bg-[#F4F5F7] p-10 text-[#14171F]">
-      <a href="/dashboard" className="mb-6 text-sm text-[#6E7280] hover:text-[#14171F]">
-        &larr; Kembali ke Beranda
-      </a>
+      <Link href="/dashboard/kelas" className="mb-6 text-sm text-[#6E7280] hover:text-[#14171F]">
+        &larr; Kembali ke Kelas
+      </Link>
 
-      <div className="flex flex-col gap-6 rounded-[14px] border border-[#E4E6EB] bg-white p-8">
-        <div className="flex flex-col gap-1">
-          <div className="text-xl font-extrabold">{moduleRow.nama}</div>
-          <div className="text-sm text-[#6E7280]">{moduleRow.kategori}</div>
-        </div>
-
-        {classRows.length > 0 ? (
-          <ul className="flex flex-col gap-2">
-            {classRows.map((classRow) => (
-              <li
-                key={classRow.id}
-                className="rounded-lg border border-[#E4E6EB] px-4 py-3 text-sm font-medium"
-              >
-                {classRow.urutan}. {classRow.judul}
-              </li>
-            ))}
-          </ul>
-        ) : canStartTrial ? (
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-[#6E7280]">
-              Kamu belum punya akses ke materi modul ini. Coba gratis{" "}
-              {moduleRow.trial_days} hari untuk membuka semua materinya.
-            </p>
-            <form action={startTrial}>
-              <input type="hidden" name="moduleId" value={moduleRow.id} />
-              <button
-                type="submit"
-                className="rounded-lg bg-[#1DB5D8] px-4 py-2.5 text-sm font-semibold text-white"
-              >
-                Mulai Trial {moduleRow.trial_days} Hari
-              </button>
-            </form>
-          </div>
-        ) : (
-          <p className="text-sm text-[#6E7280]">
-            Kamu belum punya akses ke materi modul ini. Hubungi admin untuk
-            upgrade akses.
-          </p>
-        )}
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <h1 className="text-xl font-extrabold">{moduleRow.nama}</h1>
+        <span className="rounded-full bg-[#EAF7FA] px-2.5 py-0.5 text-[11px] font-bold text-[#0E7A94]">
+          {formatSlug(moduleRow.skill_area)}
+        </span>
+        <span className="rounded-full bg-[#ECEDF0] px-2.5 py-0.5 text-[11px] font-bold text-[#6E7280]">
+          TIER {(TIER_LABEL[moduleRow.min_tier] ?? moduleRow.min_tier).toUpperCase()}
+        </span>
       </div>
+
+      {hasAccess ? (
+        <KelasPlayer lessons={lessons} />
+      ) : (
+        <div className="rounded-[14px] border border-[#E4E6EB] bg-white p-8">
+          {canStartTrial ? (
+            <div className="flex flex-col items-start gap-3">
+              <p className="text-sm text-[#6E7280]">
+                Kamu belum punya akses ke materi modul ini. Coba gratis{" "}
+                {moduleRow.trial_days} hari untuk membuka semua materinya.
+              </p>
+              <form action={startTrial}>
+                <input type="hidden" name="moduleId" value={moduleRow.id} />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-[#1DB5D8] px-4 py-2.5 text-sm font-semibold text-white"
+                >
+                  Mulai Trial {moduleRow.trial_days} Hari
+                </button>
+              </form>
+            </div>
+          ) : (
+            <p className="text-sm text-[#6E7280]">
+              Kamu belum punya akses ke materi modul ini. Hubungi admin untuk
+              upgrade akses.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

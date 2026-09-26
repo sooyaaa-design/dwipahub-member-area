@@ -7,6 +7,7 @@ export type ModuleRow = {
   min_tier: string;
   trial_days: number;
   vertical: string;
+  skill_area: string;
   module_type: "kelas" | "marketplace" | "tool" | "app";
 };
 

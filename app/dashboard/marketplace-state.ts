@@ -4,7 +4,7 @@ import type { AccessRow, ModuleRow } from "./module-cta";
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
 export const MODULE_COLUMNS =
-  "id, nama, kategori, min_tier, trial_days, vertical, module_type";
+  "id, nama, kategori, min_tier, trial_days, vertical, skill_area, module_type";
 
 export type MarketplaceState =
   | { kind: "hidden" }

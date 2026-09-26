@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { TIER_LABEL } from "@/lib/labels";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
 import { MarketplaceCard } from "./marketplace-card";
@@ -8,12 +10,6 @@ import {
 } from "./marketplace-state";
 import { ModuleCard } from "./module-card";
 import { ModuleCtaButton, getModuleCta, type AccessRow, type ModuleRow } from "./module-cta";
-
-const TIER_LABEL: Record<string, string> = {
-  pengantar: "Pengantar",
-  sertifikasi: "Sertifikasi",
-  lanjutan: "Lanjutan",
-};
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -55,10 +51,18 @@ export default async function DashboardPage() {
             <span className="border-b-2 border-[#1DB5D8] pb-1.5 font-bold text-[#14171F]">
               Beranda
             </span>
-            <span>Kelas</span>
-            <span>Marketplace</span>
-            <span>AI Tools</span>
-            <span>Profil</span>
+            <Link href="/dashboard/kelas" className="hover:text-[#14171F]">
+              Kelas
+            </Link>
+            <Link href="/dashboard/marketplace" className="hover:text-[#14171F]">
+              Marketplace
+            </Link>
+            <Link href="/dashboard/ai-tools" className="hover:text-[#14171F]">
+              AI Tools
+            </Link>
+            <Link href="/dashboard/profil" className="hover:text-[#14171F]">
+              Profil
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-3.5">
@@ -160,22 +164,14 @@ export default async function DashboardPage() {
                 muted={!aiToolsUnlocked}
                 badge={aiToolsUnlocked ? undefined : "🔒 LANJUTAN"}
                 footer={
-                  aiToolsUnlocked ? (
-                    <button
-                      type="button"
-                      className="w-full rounded-lg border border-[#D8DAE0] px-4 py-2.5 text-sm font-semibold text-[#14171F] hover:bg-[#F4F5F7]"
-                    >
-                      Buka AI Tools
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled
-                      className="w-full cursor-not-allowed rounded-lg border border-[#D8DAE0] px-4 py-2.5 text-sm font-semibold text-[#9AA0AC]"
-                    >
-                      Upgrade untuk Akses
-                    </button>
-                  )
+                  <Link
+                    href="/dashboard/ai-tools"
+                    className={`w-full rounded-lg border border-[#D8DAE0] px-4 py-2.5 text-center text-sm font-semibold hover:bg-[#F4F5F7] ${
+                      aiToolsUnlocked ? "text-[#14171F]" : "text-[#9AA0AC]"
+                    }`}
+                  >
+                    {aiToolsUnlocked ? "Buka AI Tools" : "Upgrade untuk Akses"}
+                  </Link>
                 }
               />
             </div>
