@@ -130,6 +130,20 @@ export const DUMMY_PEMBAYARAN: Pembayaran[] = [
   { id: "INV-2026-0710", tanggal: "10 Jul 2026", deskripsi: "Pendaftaran Member Pengantar", jumlah: 250_000, status: "Lunas" },
 ];
 
+export type Notifikasi = {
+  id: string;
+  judul: string;
+  waktu: string;
+  belumDibaca: boolean;
+};
+
+// TODO: ganti dengan data asli setelah payment webhook jalan
+export const DUMMY_NOTIFIKASI: Notifikasi[] = [
+  { id: "notif-1", judul: "Pembelian berhasil - Kelas Sertifikasi Umroh", waktu: "Baru saja", belumDibaca: true },
+  { id: "notif-2", judul: "Trial 'Digital Marketing' akan berakhir 2 hari lagi", waktu: "Kemarin", belumDibaca: true },
+  { id: "notif-3", judul: "Modul baru tersedia: Manajemen Keuangan Travel", waktu: "3 hari lalu", belumDibaca: true },
+];
+
 export function formatRupiah(value: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",

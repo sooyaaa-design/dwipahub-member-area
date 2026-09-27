@@ -26,7 +26,7 @@ export default async function AiToolsPage() {
       <Link href="/dashboard" className="mb-6 text-sm text-[#6E7280] hover:text-[#14171F]">
         &larr; Kembali ke Beranda
       </Link>
-      <h1 className="mb-1 text-xl font-extrabold">AI Tools</h1>
+      <h1 className="mb-1 text-xl font-extrabold text-brand-navy">AI Tools</h1>
       <p className="mb-6 text-sm text-[#6E7280]">
         Buat visual promosi travel umroh secara otomatis.
       </p>

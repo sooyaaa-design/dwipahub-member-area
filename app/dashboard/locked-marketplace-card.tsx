@@ -53,7 +53,7 @@ export function LockedMarketplaceCard({
             </form>
             <a
               href={`/dashboard/kelas/${kelas.id}`}
-              className="rounded-lg bg-[#1DB5D8] px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90"
             >
               Lihat Kelas {kelas.nama}
             </a>

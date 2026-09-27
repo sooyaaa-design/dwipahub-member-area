@@ -55,7 +55,7 @@ export default async function KelasPage(props: PageProps<"/dashboard/kelas">) {
   const chipClass = (active: boolean) =>
     `rounded-full border px-3.5 py-1.5 text-xs font-semibold ${
       active
-        ? "border-[#1DB5D8] bg-[#EAF7FA] text-[#0E7A94]"
+        ? "border-brand-teal bg-brand-teal/10 text-brand-navy"
         : "border-[#D8DAE0] bg-white text-[#4B4F58] hover:bg-[#F4F5F7]"
     }`;
 
@@ -83,7 +83,7 @@ export default async function KelasPage(props: PageProps<"/dashboard/kelas">) {
                 aria-current={vertical === activeVertical ? "page" : undefined}
                 className={`-mb-px border-b-2 pb-2.5 ${
                   vertical === activeVertical
-                    ? "border-[#1DB5D8] font-bold text-[#14171F]"
+                    ? "border-brand-teal font-bold text-[#14171F]"
                     : "border-transparent text-[#4B4F58] hover:text-[#14171F]"
                 }`}
               >

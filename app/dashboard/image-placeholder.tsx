@@ -10,7 +10,7 @@ export function ImagePlaceholder({
     <div
       role="img"
       aria-label={label}
-      className={`flex flex-col items-center justify-center gap-2 bg-[#EAF7FA] text-[#0E7A94] ${className}`}
+      className={`flex flex-col items-center justify-center gap-2 bg-brand-teal/10 text-brand-navy ${className}`}
     >
       <svg
         width="32"

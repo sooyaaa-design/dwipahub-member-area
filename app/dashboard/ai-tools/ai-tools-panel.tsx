@@ -5,7 +5,7 @@ import { DUMMY_AI_RESULTS } from "@/lib/dummy-data";
 import { ImagePlaceholder } from "../image-placeholder";
 
 const fieldClass =
-  "rounded-lg border border-[#D8DAE0] bg-white px-3 py-2.5 text-sm outline-none focus:border-[#1DB5D8] disabled:bg-[#F7F7F8] disabled:text-[#9AA0AC]";
+  "rounded-lg border border-[#D8DAE0] bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-teal disabled:bg-[#F7F7F8] disabled:text-[#9AA0AC]";
 
 export function AiToolsPanel({ unlocked }: { unlocked: boolean }) {
   const [notice, setNotice] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export function AiToolsPanel({ unlocked }: { unlocked: boolean }) {
 
             <button
               type="submit"
-              className="self-start rounded-lg bg-[#1DB5D8] px-4 py-2.5 text-sm font-semibold text-white disabled:bg-[#C9CCD3]"
+              className="self-start rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:bg-[#C9CCD3]"
             >
               Generate
             </button>

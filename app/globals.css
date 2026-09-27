@@ -12,6 +12,23 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* DwipaHub brand. Navy = primary (key text, primary buttons, wordmark);
+   teal = secondary (accents, active badges/indicators, progress). Tints use
+   opacity modifiers (e.g. bg-brand-teal/10) instead of extra hex values. */
+@theme {
+  --color-brand-navy: #1b3a6b;
+  --color-brand-teal: #1db5d8;
+}
+
+/* Hero / main-CTA surfaces only. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-brand-navy),
+    var(--color-brand-teal)
+  );
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

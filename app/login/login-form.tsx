@@ -21,7 +21,7 @@ export function LoginForm({ next }: { next?: string }) {
           type="email"
           required
           autoComplete="email"
-          className="rounded-lg border border-[#D8DAE0] px-3 py-2.5 text-sm outline-none focus:border-[#1DB5D8]"
+          className="rounded-lg border border-[#D8DAE0] px-3 py-2.5 text-sm outline-none focus:border-brand-teal"
         />
       </div>
 
@@ -35,7 +35,7 @@ export function LoginForm({ next }: { next?: string }) {
           type="password"
           required
           autoComplete="current-password"
-          className="rounded-lg border border-[#D8DAE0] px-3 py-2.5 text-sm outline-none focus:border-[#1DB5D8]"
+          className="rounded-lg border border-[#D8DAE0] px-3 py-2.5 text-sm outline-none focus:border-brand-teal"
         />
       </div>
 
@@ -48,7 +48,7 @@ export function LoginForm({ next }: { next?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-[#1DB5D8] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+        className="rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:opacity-60"
       >
         {pending ? "Masuk..." : "Masuk"}
       </button>

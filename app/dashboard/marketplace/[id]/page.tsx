@@ -50,7 +50,7 @@ export default async function MarketplaceDetailPage(
       >
         &larr; Kembali ke Marketplace
       </Link>
-      <h1 className="mb-1 text-xl font-extrabold">{marketplace.nama}</h1>
+      <h1 className="mb-1 text-xl font-extrabold text-brand-navy">{marketplace.nama}</h1>
       <p className="mb-6 text-sm text-[#6E7280]">
         Paket umroh siap jual dari provider mitra. Pilih paket, lalu hubungi
         provider untuk kerja sama penjualan.
@@ -74,7 +74,7 @@ export default async function MarketplaceDetailPage(
                   <div className="text-sm text-[#6E7280]">oleh {paket.provider}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-extrabold text-[#1B3A6B]">
+                  <div className="text-lg font-extrabold text-brand-navy">
                     {formatRupiah(paket.harga)}
                   </div>
                   <div className="text-xs text-[#6E7280]">per jamaah</div>
@@ -99,7 +99,7 @@ export default async function MarketplaceDetailPage(
                 <ol className="mt-3 flex flex-col gap-2">
                   {paket.itinerary.map((item) => (
                     <li key={item.hari} className="flex gap-3">
-                      <span className="w-20 shrink-0 font-semibold text-[#0E7A94]">{item.hari}</span>
+                      <span className="w-20 shrink-0 font-semibold text-brand-navy">{item.hari}</span>
                       <span className="text-[#4B4F58]">{item.kegiatan}</span>
                     </li>
                   ))}
@@ -109,7 +109,7 @@ export default async function MarketplaceDetailPage(
               <div className="self-start">
                 <DummyActionButton
                   label={`Hubungi ${paket.provider}`}
-                  className="rounded-lg bg-[#1DB5D8] px-4 py-2.5 text-sm font-semibold text-white"
+                  className="rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-navy/90"
                   message="Kontak provider belum aktif (masih data dummy)."
                 />
               </div>

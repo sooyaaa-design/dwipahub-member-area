@@ -74,8 +74,8 @@ export default async function KelasDetailPage(
       </Link>
 
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <h1 className="text-xl font-extrabold">{moduleRow.nama}</h1>
-        <span className="rounded-full bg-[#EAF7FA] px-2.5 py-0.5 text-[11px] font-bold text-[#0E7A94]">
+        <h1 className="text-xl font-extrabold text-brand-navy">{moduleRow.nama}</h1>
+        <span className="rounded-full bg-brand-teal/10 px-2.5 py-0.5 text-[11px] font-bold text-brand-navy">
           {formatSlug(moduleRow.skill_area)}
         </span>
         <span className="rounded-full bg-[#ECEDF0] px-2.5 py-0.5 text-[11px] font-bold text-[#6E7280]">
@@ -97,7 +97,7 @@ export default async function KelasDetailPage(
                 <input type="hidden" name="moduleId" value={moduleRow.id} />
                 <button
                   type="submit"
-                  className="rounded-lg bg-[#1DB5D8] px-4 py-2.5 text-sm font-semibold text-white"
+                  className="rounded-lg bg-brand-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90"
                 >
                   Mulai Trial {moduleRow.trial_days} Hari
                 </button>

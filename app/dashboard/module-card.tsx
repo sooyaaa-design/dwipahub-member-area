@@ -25,7 +25,7 @@ export function ModuleCard({
         </span>
       )}
       <div
-        className={`h-10 w-10 rounded-[10px] ${muted ? "bg-[#E4E6EB]" : "bg-[#EAF7FA]"}`}
+        className={`h-10 w-10 rounded-[10px] ${muted ? "bg-[#E4E6EB]" : "bg-brand-teal/10"}`}
       />
       <div className="flex flex-grow flex-col gap-1">
         <div className={`text-[15px] font-bold ${muted ? "text-[#9AA0AC]" : ""}`}>

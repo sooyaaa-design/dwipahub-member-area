@@ -30,7 +30,8 @@ export function isTrialActive(access: AccessRow, now = Date.now()) {
 }
 
 type Cta =
-  | { kind: "link"; label: string; href: string }
+  // hero: styling only — marks the trial-invite CTA for the brand gradient.
+  | { kind: "link"; label: string; href: string; hero?: boolean }
   | { kind: "start-trial"; label: string }
   | { kind: "disabled"; label: string };
 
@@ -48,6 +49,7 @@ export function getModuleCta(
           kind: "link",
           label: `Coba Gratis ${moduleRow.trial_days} Hari`,
           href: `/register?module=${moduleRow.id}&trial=true`,
+          hero: true,
         }
       : {
           kind: "link",
@@ -101,6 +103,7 @@ const buttonClass =
   "w-full rounded-lg border px-4 py-2.5 text-center text-sm font-semibold";
 const activeButtonClass = `${buttonClass} border-[#D8DAE0] text-[#14171F] hover:bg-[#F4F5F7]`;
 const disabledButtonClass = `${buttonClass} cursor-not-allowed border-[#D8DAE0] text-[#9AA0AC]`;
+const heroButtonClass = `${buttonClass} border-transparent bg-brand-gradient text-white shadow-sm hover:opacity-90`;
 
 export function ModuleCtaButton({
   cta,
@@ -111,7 +114,7 @@ export function ModuleCtaButton({
 }) {
   if (cta.kind === "link") {
     return (
-      <a href={cta.href} className={activeButtonClass}>
+      <a href={cta.href} className={cta.hero ? heroButtonClass : activeButtonClass}>
         {cta.label}
       </a>
     );
@@ -121,7 +124,7 @@ export function ModuleCtaButton({
     return (
       <form action={startTrial}>
         <input type="hidden" name="moduleId" value={moduleId} />
-        <button type="submit" className={activeButtonClass}>
+        <button type="submit" className={heroButtonClass}>
           {cta.label}
         </button>
       </form>

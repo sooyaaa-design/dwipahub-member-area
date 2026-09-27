@@ -61,7 +61,7 @@ export function KelasPlayer({ lessons }: { lessons: Lesson[] }) {
                 onClick={() => setActiveTab(tab.id)}
                 className={`-mb-px border-b-2 py-3.5 text-sm ${
                   activeTab === tab.id
-                    ? "border-[#1DB5D8] font-bold text-[#14171F]"
+                    ? "border-brand-teal font-bold text-[#14171F]"
                     : "border-transparent font-medium text-[#4B4F58] hover:text-[#14171F]"
                 }`}
               >
@@ -106,7 +106,7 @@ export function KelasPlayer({ lessons }: { lessons: Lesson[] }) {
                   id="diskusi-baru"
                   rows={3}
                   placeholder="Tulis pertanyaan untuk mentor..."
-                  className="rounded-lg border border-[#D8DAE0] px-3 py-2.5 text-sm outline-none focus:border-[#1DB5D8]"
+                  className="rounded-lg border border-[#D8DAE0] px-3 py-2.5 text-sm outline-none focus:border-brand-teal"
                 />
                 <div className="self-end">
                   <DummyActionButton label="Kirim" className={secondaryButton} />
@@ -144,7 +144,7 @@ export function KelasPlayer({ lessons }: { lessons: Lesson[] }) {
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-[#ECEDF0]">
             <div
-              className="h-full bg-[#1DB5D8]"
+              className="h-full bg-brand-teal"
               style={{ width: `${(doneCount / lessons.length) * 100}%` }}
             />
           </div>
@@ -160,13 +160,13 @@ export function KelasPlayer({ lessons }: { lessons: Lesson[] }) {
                   onClick={() => setActiveLessonId(lesson.id)}
                   aria-current={active ? "true" : undefined}
                   className={`flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left text-sm ${
-                    active ? "bg-[#EAF7FA]" : "hover:bg-[#F4F5F7]"
+                    active ? "bg-brand-teal/10" : "hover:bg-[#F4F5F7]"
                   }`}
                 >
                   <span
                     className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
                       lesson.selesai
-                        ? "bg-[#1DB5D8] text-white"
+                        ? "bg-brand-teal text-white"
                         : "border border-[#C9CCD3] text-[#6E7280]"
                     }`}
                   >
