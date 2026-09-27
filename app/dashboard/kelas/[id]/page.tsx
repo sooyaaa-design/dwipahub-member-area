@@ -4,6 +4,7 @@ import { DUMMY_LESSONS, type Lesson } from "@/lib/dummy-data";
 import { TIER_LABEL, TIER_ORDER, formatSlug } from "@/lib/labels";
 import { createClient } from "@/lib/supabase/server";
 import { startTrial } from "../../actions";
+import { isTrialActive, type AccessRow } from "../../module-cta";
 import { KelasPlayer } from "./kelas-player";
 
 export default async function KelasDetailPage(
@@ -55,9 +56,7 @@ export default async function KelasDetailPage(
     (member != null &&
       TIER_ORDER.indexOf(member.tier) >= TIER_ORDER.indexOf(moduleRow.min_tier)) ||
     access?.status === "active" ||
-    (access?.status === "trial" &&
-      access.trial_ends_at != null &&
-      new Date(access.trial_ends_at) > new Date());
+    isTrialActive(access as AccessRow);
 
   const canStartTrial = !access && moduleRow.trial_days > 0;
 

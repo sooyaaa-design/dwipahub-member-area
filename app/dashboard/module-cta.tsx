@@ -18,6 +18,17 @@ export type AccessRow = {
   trial_ends_at: string | null;
 } | null;
 
+// Single source of truth for trial validity in the app; mirrors the
+// `trial_ends_at > now()` check in the classes RLS policy. The status column
+// alone is not trusted: it stays 'trial' until the housekeeping job runs.
+export function isTrialActive(access: AccessRow, now = Date.now()) {
+  return (
+    access?.status === "trial" &&
+    access.trial_ends_at != null &&
+    new Date(access.trial_ends_at).getTime() > now
+  );
+}
+
 type Cta =
   | { kind: "link"; label: string; href: string }
   | { kind: "start-trial"; label: string }
@@ -59,11 +70,9 @@ export function getModuleCta(
         href: `/dashboard/kelas/${moduleRow.id}`,
       };
     case "trial": {
-      const endsAt = access.trial_ends_at
-        ? new Date(access.trial_ends_at).getTime()
-        : 0;
-      if (endsAt > Date.now()) {
-        const daysLeft = Math.max(1, Math.ceil((endsAt - Date.now()) / 86_400_000));
+      if (isTrialActive(access)) {
+        const msLeft = new Date(access.trial_ends_at!).getTime() - Date.now();
+        const daysLeft = Math.max(1, Math.ceil(msLeft / 86_400_000));
         return {
           kind: "link",
           label: `Lanjutkan (sisa ${daysLeft} hari)`,
@@ -73,7 +82,14 @@ export function getModuleCta(
       return { kind: "disabled", label: "Trial Berakhir - Upgrade" };
     }
     case "expired":
-      return { kind: "disabled", label: "Akses Berakhir - Upgrade" };
+      // Keeps the label stable when the housekeeping job flips a lapsed
+      // trial from 'trial' to 'expired' (trial_ends_at is preserved).
+      return {
+        kind: "disabled",
+        label: access.trial_ends_at
+          ? "Trial Berakhir - Upgrade"
+          : "Akses Berakhir - Upgrade",
+      };
     case "pending":
       return { kind: "disabled", label: "Menunggu Persetujuan" };
     case "revoked":
